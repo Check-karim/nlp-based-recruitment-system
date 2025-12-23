@@ -116,10 +116,14 @@ def login_required(role=None):
     return decorator
 
 
-@app.before_first_request
 def setup():
     db.create_all()
     ensure_admin_user()
+
+
+# Initialize database and seed admin once at startup (Flask 3 removed before_first_request)
+with app.app_context():
+    setup()
 
 
 @app.route("/")
