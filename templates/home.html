@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+    <div>
+        <p class="eyebrow">AI-assisted screening</p>
+        <h1>Find the right talent faster.</h1>
+        <p class="lede">Upload resumes, match them to roles, and guide decisions with transparent scoring.</p>
+        <div class="actions">
+            <a class="btn primary" href="{{ url_for('register') }}">Get Started</a>
+            <a class="btn ghost" href="{{ url_for('about') }}">Learn more</a>
+        </div>
+    </div>
+    <div class="hero-card">
+        <p class="muted">Sample matches</p>
+        <ul class="list">
+            {% for job in jobs %}
+                <li>
+                    <div class="list-title">{{ job.title }}</div>
+                    <div class="pill subtle">{{ job.location or "Remote" }}</div>
+                </li>
+            {% else %}
+                <li>No jobs yet. Admin can post from the dashboard.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+
+<section class="grid">
+    <div class="card">
+        <h3>Unified access</h3>
+        <p>One login page for admins and candidates with tailored destinations.</p>
+    </div>
+    <div class="card">
+        <h3>NLP scoring</h3>
+        <p>We compute overlap-based relevance scores to prioritize candidates quickly.</p>
+    </div>
+    <div class="card">
+        <h3>Responsive UI</h3>
+        <p>Modern layout that works on laptops, tablets, and phones.</p>
+    </div>
+</section>
+{% endblock %}
+

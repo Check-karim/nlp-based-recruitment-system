@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="split">
+    <div class="card">
+        <p class="eyebrow">Overview</p>
+        <div class="stats">
+            <div><strong>{{ total_jobs }}</strong><span>Jobs</span></div>
+            <div><strong>{{ total_apps }}</strong><span>Applications</span></div>
+            <div><strong>{{ total_users }}</strong><span>Candidates</span></div>
+        </div>
+        <form method="POST" action="{{ url_for('create_job') }}" class="form">
+            <h3>Post a job</h3>
+            <label>Title
+                <input type="text" name="title" placeholder="Data Scientist" required>
+            </label>
+            <label>Description
+                <textarea name="description" rows="4" placeholder="Role description" required></textarea>
+            </label>
+            <label>Location
+                <input type="text" name="location" placeholder="Remote / City">
+            </label>
+            <button class="btn primary" type="submit">Publish</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3>Jobs</h3>
+        <ul class="list">
+            {% for job in jobs %}
+                <li>
+                    <div class="list-title">{{ job.title }}</div>
+                    <p class="muted small">{{ job.description[:120] }}{% if job.description|length > 120 %}...{% endif %}</p>
+                    <span class="pill subtle">{{ job.location or "Remote" }}</span>
+                </li>
+            {% else %}
+                <li>No jobs posted.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+
+<section>
+    <div class="card">
+        <div class="header-row">
+            <h3>Applications (ranked)</h3>
+            <a class="link" href="{{ url_for('reports') }}">Generate reports</a>
+        </div>
+        <div class="table">
+            <div class="table-head">
+                <span>Candidate</span><span>Job</span><span>Score</span><span>Status</span><span>Decision</span>
+            </div>
+            {% for app in applications %}
+                <div class="table-row">
+                    <span>{{ app.user.name }}</span>
+                    <span>{{ app.job.title }}</span>
+                    <span>{{ app.match_score }}%</span>
+                    <span class="pill subtle">{{ app.status }}</span>
+                    <form class="inline-form" method="POST" action="{{ url_for('update_application_status', application_id=app.id) }}">
+                        <select name="status">
+                            {% for status in ["Under Review", "Selected", "Rejected"] %}
+                                <option value="{{ status }}" {% if app.status == status %}selected{% endif %}>{{ status }}</option>
+                            {% endfor %}
+                        </select>
+                        <button class="btn secondary" type="submit">Update</button>
+                    </form>
+                </div>
+            {% else %}
+                <p class="muted">No applications yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+

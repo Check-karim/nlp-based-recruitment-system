@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="auth">
+    <div class="card wide">
+        <h2>Login</h2>
+        <p class="muted">Admins and users share this page. Admin credentials: admin / admin.</p>
+        <form method="POST" class="form">
+            <label>Email or admin username
+                <input type="text" name="identifier" placeholder="you@example.com or admin" required>
+            </label>
+            <label>Password
+                <input type="password" name="password" placeholder="Password" required>
+            </label>
+            <button class="btn primary" type="submit">Sign in</button>
+        </form>
+        <p class="muted">Need an account? <a href="{{ url_for('register') }}">Register here</a>.</p>
+    </div>
+</section>
+{% endblock %}
+

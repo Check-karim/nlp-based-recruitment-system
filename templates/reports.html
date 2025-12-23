@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="narrow">
+    <div class="card">
+        <h2>Reports</h2>
+        <p class="muted">Lightweight overview of pipeline health.</p>
+        <h4>Applications per job</h4>
+        <ul class="list">
+            {% for title, count in job_stats %}
+                <li class="flex-between">
+                    <span>{{ title }}</span>
+                    <span class="pill subtle">{{ count }}</span>
+                </li>
+            {% else %}
+                <li>No data yet.</li>
+            {% endfor %}
+        </ul>
+        <h4>Status distribution</h4>
+        <ul class="list">
+            {% for status, count in status_stats %}
+                <li class="flex-between">
+                    <span>{{ status }}</span>
+                    <span class="pill subtle">{{ count }}</span>
+                </li>
+            {% else %}
+                <li>No data yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+{% endblock %}
+

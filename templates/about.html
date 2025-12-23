@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="narrow">
+    <p class="eyebrow">How it works</p>
+    <h2>Resume-to-offer in seven steps</h2>
+    <ol class="steps">
+        <li><strong>Start:</strong> Candidates register and log in.</li>
+        <li><strong>Upload:</strong> Resumes are captured as text.</li>
+        <li><strong>NLP Parsing:</strong> We tokenize and normalize key terms.</li>
+        <li><strong>Match:</strong> Overlap scoring compares skills to job descriptions.</li>
+        <li><strong>Rank:</strong> Applications are ordered by match score.</li>
+        <li><strong>Review:</strong> Admins review summaries and status.</li>
+        <li><strong>Decision & Notify:</strong> Mark selected or rejected and notify.</li>
+    </ol>
+
+    <div class="card">
+        <h3>Use cases</h3>
+        <div class="split">
+            <div>
+                <h4>Candidate</h4>
+                <ul class="list">
+                    <li>Browse and apply to jobs</li>
+                    <li>Upload and reuse resumes</li>
+                    <li>Track application status</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Admin</h4>
+                <ul class="list">
+                    <li>Post jobs and view applicants</li>
+                    <li>Screen with match scores</li>
+                    <li>Generate quick reports</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

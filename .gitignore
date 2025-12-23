@@ -1,0 +1,37 @@
+# Python / Flask
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.sqlite
+instance/*.db
+instance/*.sqlite
+
+# Virtual env
+.venv/
+env/
+venv/
+
+# IDE / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Byte-compiled / logs
+*.log
+*.pot
+*.mo
+
+# Local environment
+.env
+.env.*
+
+# Coverage / testing
+.coverage
+coverage.*
+htmlcov/
+
+# Flask cache
+*.pid
+

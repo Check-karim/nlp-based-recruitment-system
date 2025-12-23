@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="split">
+    <div class="card">
+        <h2>Welcome, {{ user.name }}</h2>
+        <p class="muted">Your latest resume</p>
+        {% if latest_resume %}
+            <div class="resume-box">
+                <p>{{ latest_resume.content[:250] }}{% if latest_resume.content|length > 250 %}...{% endif %}</p>
+                <p class="muted small">Updated {{ latest_resume.created_at.strftime('%Y-%m-%d') }}</p>
+            </div>
+        {% else %}
+            <p class="muted">No resume yet. Paste one below.</p>
+        {% endif %}
+        <form method="POST" action="{{ url_for('upload_resume') }}" class="form">
+            <label>Upload / paste resume
+                <textarea name="resume_text" rows="5" placeholder="Paste your resume text" required></textarea>
+            </label>
+            <button class="btn primary" type="submit">Save resume</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3>Your applications</h3>
+        <div class="table">
+            <div class="table-head">
+                <span>Job</span><span>Status</span><span>Score</span>
+            </div>
+            {% for app in applications %}
+                <div class="table-row">
+                    <span>{{ app.job.title }}</span>
+                    <span class="pill subtle">{{ app.status }}</span>
+                    <span>{{ app.match_score }}%</span>
+                </div>
+            {% else %}
+                <p class="muted">No applications yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="card">
+        <div class="header-row">
+            <h3>Open roles</h3>
+            <p class="muted small">Apply with your saved or new resume text.</p>
+        </div>
+        <div class="grid">
+            {% for job in jobs %}
+                <div class="job-card">
+                    <div class="header-row">
+                        <h4>{{ job.title }}</h4>
+                        <span class="pill subtle">{{ job.location or "Remote" }}</span>
+                    </div>
+                    <p>{{ job.description[:180] }}{% if job.description|length > 180 %}...{% endif %}</p>
+                    <form method="POST" action="{{ url_for('apply', job_id=job.id) }}" class="form compact">
+                        <label>Optional: customize resume for this job
+                            <textarea name="resume_text" rows="3" placeholder="Leave blank to use your latest saved resume"></textarea>
+                        </label>
+                        <button class="btn secondary" type="submit">Apply</button>
+                    </form>
+                </div>
+            {% else %}
+                <p class="muted">No jobs available yet. Check back soon.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
