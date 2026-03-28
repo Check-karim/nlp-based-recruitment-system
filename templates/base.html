@@ -12,7 +12,9 @@
 <body>
     <nav class="navbar">
         <div class="nav-brand">
-            <a href="{{ url_for('home') }}">NLP Recruitment</a>
+            <a href="{{ url_for('home') }}">
+                <span class="brand-icon">&#9881;</span> NLP Recruitment
+            </a>
         </div>
         <div class="nav-links">
             <a href="{{ url_for('home') }}">Home</a>
@@ -20,9 +22,11 @@
             {% if user %}
                 {% if user.role == "admin" %}
                     <a href="{{ url_for('admin_dashboard') }}">Admin</a>
+                    <a href="{{ url_for('reports') }}">Reports</a>
                 {% else %}
                     <a href="{{ url_for('user_dashboard') }}">Dashboard</a>
                 {% endif %}
+                <span class="nav-user">{{ user.username }}</span>
                 <a class="pill" href="{{ url_for('logout') }}">Logout</a>
             {% else %}
                 <a href="{{ url_for('login') }}">Login</a>
@@ -46,8 +50,17 @@
     </main>
 
     <footer class="footer">
-        <p>Built for modern hiring with lightweight NLP matching.</p>
+        <p>NLP-Based Recruitment Management Information System</p>
     </footer>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Auto-dismiss flash messages after 5 seconds
+        document.querySelectorAll(".flash").forEach(function (el) {
+            setTimeout(function () { el.style.opacity = "0"; setTimeout(function () { el.remove(); }, 400); }, 5000);
+        });
+    });
+    </script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>
-

@@ -4,15 +4,25 @@
     <div class="card wide">
         <h2>Create account</h2>
         <p class="muted">Register as a candidate to start applying.</p>
-        <form method="POST" class="form">
+        <form method="POST" class="form" id="registerForm" novalidate>
             <label>Full name
-                <input type="text" name="name" placeholder="Alex Doe" required>
+                <input type="text" name="name" id="reg-name" placeholder="Alex Doe" required>
+                <span class="field-hint">Letters and spaces only</span>
+                <span class="field-error" id="err-name"></span>
+            </label>
+            <label>Username
+                <input type="text" name="username" id="reg-username" placeholder="alexdoe" required>
+                <span class="field-hint">No spaces, cannot start with a number</span>
+                <span class="field-error" id="err-username"></span>
             </label>
             <label>Email
-                <input type="email" name="email" placeholder="you@example.com" required>
+                <input type="email" name="email" id="reg-email" placeholder="you@example.com" required>
+                <span class="field-error" id="err-email"></span>
             </label>
             <label>Password
-                <input type="password" name="password" placeholder="Password" required>
+                <input type="password" name="password" id="reg-password" placeholder="Min 6 characters" required minlength="6">
+                <span class="field-hint">At least 6 characters</span>
+                <span class="field-error" id="err-password"></span>
             </label>
             <button class="btn primary" type="submit">Register</button>
         </form>
@@ -21,3 +31,64 @@
 </section>
 {% endblock %}
 
+{% block scripts %}
+<script>
+(function () {
+    var form = document.getElementById("registerForm");
+    var fields = {
+        name:     { el: document.getElementById("reg-name"),     err: document.getElementById("err-name") },
+        username: { el: document.getElementById("reg-username"), err: document.getElementById("err-username") },
+        email:    { el: document.getElementById("reg-email"),    err: document.getElementById("err-email") },
+        password: { el: document.getElementById("reg-password"), err: document.getElementById("err-password") }
+    };
+
+    function validateName(v) {
+        if (!v) return "Name is required.";
+        if (!/^[A-Za-z\s]+$/.test(v)) return "Name must contain only letters and spaces.";
+        if (v.length < 2) return "Name must be at least 2 characters.";
+        return "";
+    }
+    function validateUsername(v) {
+        if (!v) return "Username is required.";
+        if (/\s/.test(v)) return "Username must not contain spaces.";
+        if (/^\d/.test(v)) return "Username must not start with a number.";
+        if (!/^[A-Za-z][A-Za-z0-9_]*$/.test(v)) return "Only letters, numbers, and underscores.";
+        if (v.length < 3) return "Username must be at least 3 characters.";
+        return "";
+    }
+    function validateEmail(v) {
+        if (!v) return "Email is required.";
+        if (!/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(v)) return "Please enter a valid email.";
+        return "";
+    }
+    function validatePassword(v) {
+        if (!v) return "Password is required.";
+        if (v.length < 6) return "Password must be at least 6 characters.";
+        return "";
+    }
+
+    var validators = { name: validateName, username: validateUsername, email: validateEmail, password: validatePassword };
+
+    function showError(key, msg) {
+        fields[key].err.textContent = msg;
+        fields[key].el.classList.toggle("invalid", !!msg);
+        fields[key].el.classList.toggle("valid", !msg && fields[key].el.value.length > 0);
+    }
+
+    Object.keys(fields).forEach(function (key) {
+        fields[key].el.addEventListener("input", function () { showError(key, validators[key](this.value.trim())); });
+        fields[key].el.addEventListener("blur",  function () { showError(key, validators[key](this.value.trim())); });
+    });
+
+    form.addEventListener("submit", function (e) {
+        var hasError = false;
+        Object.keys(fields).forEach(function (key) {
+            var msg = validators[key](fields[key].el.value.trim());
+            showError(key, msg);
+            if (msg) hasError = true;
+        });
+        if (hasError) e.preventDefault();
+    });
+})();
+</script>
+{% endblock %}

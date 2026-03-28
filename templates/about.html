@@ -2,15 +2,15 @@
 {% block content %}
 <section class="narrow">
     <p class="eyebrow">How it works</p>
-    <h2>Resume-to-offer in seven steps</h2>
+    <h2>NLP-based recruitment in seven steps</h2>
     <ol class="steps">
-        <li><strong>Start:</strong> Candidates register and log in.</li>
-        <li><strong>Upload:</strong> Resumes are captured as text.</li>
-        <li><strong>NLP Parsing:</strong> We tokenize and normalize key terms.</li>
-        <li><strong>Match:</strong> Overlap scoring compares skills to job descriptions.</li>
-        <li><strong>Rank:</strong> Applications are ordered by match score.</li>
-        <li><strong>Review:</strong> Admins review summaries and status.</li>
-        <li><strong>Decision & Notify:</strong> Mark selected or rejected and notify.</li>
+        <li><strong>Register:</strong> Candidates create an account with validated credentials.</li>
+        <li><strong>Upload:</strong> Upload resumes as PDF, DOCX, or TXT files, or paste text directly.</li>
+        <li><strong>NLP parsing:</strong> The system extracts text, tokenizes content, and identifies skills using NLP.</li>
+        <li><strong>TF-IDF matching:</strong> Resumes are vectorized and scored against job descriptions using cosine similarity.</li>
+        <li><strong>Rank:</strong> Applications are ranked by match score so the best candidates surface first.</li>
+        <li><strong>Review:</strong> Admins review candidates with skill breakdowns and analytics dashboards.</li>
+        <li><strong>Decision:</strong> Mark candidates as selected or rejected with full audit trail.</li>
     </ol>
 
     <div class="card">
@@ -19,21 +19,35 @@
             <div>
                 <h4>Candidate</h4>
                 <ul class="list">
+                    <li>Upload resumes (PDF, DOCX, TXT)</li>
+                    <li>Get automatic skill extraction</li>
                     <li>Browse and apply to jobs</li>
-                    <li>Upload and reuse resumes</li>
+                    <li>See NLP match scores</li>
                     <li>Track application status</li>
                 </ul>
             </div>
             <div>
                 <h4>Admin</h4>
                 <ul class="list">
-                    <li>Post jobs and view applicants</li>
-                    <li>Screen with match scores</li>
-                    <li>Generate quick reports</li>
+                    <li>Post jobs with detailed descriptions</li>
+                    <li>View NLP-ranked applicants</li>
+                    <li>Review extracted skills per resume</li>
+                    <li>Generate analytics reports</li>
+                    <li>Track pipeline health</li>
                 </ul>
             </div>
         </div>
     </div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>NLP techniques used</h3>
+        <ul class="list">
+            <li><strong>Text extraction</strong> — PDF and DOCX parsing with pdfplumber and python-docx</li>
+            <li><strong>Tokenization</strong> — Breaking text into normalized word tokens</li>
+            <li><strong>Skill extraction</strong> — Pattern matching against a curated skill taxonomy</li>
+            <li><strong>TF-IDF vectorization</strong> — Converting text to weighted feature vectors</li>
+            <li><strong>Cosine similarity</strong> — Measuring semantic closeness between resume and job description</li>
+        </ul>
+    </div>
 </section>
 {% endblock %}
-

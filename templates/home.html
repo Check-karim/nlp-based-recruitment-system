@@ -2,16 +2,16 @@
 {% block content %}
 <section class="hero">
     <div>
-        <p class="eyebrow">AI-assisted screening</p>
+        <p class="eyebrow">NLP-powered recruitment</p>
         <h1>Find the right talent faster.</h1>
-        <p class="lede">Upload resumes, match them to roles, and guide decisions with transparent scoring.</p>
+        <p class="lede">Upload resumes in PDF, DOCX, or plain text. Our NLP engine parses, extracts skills, and scores candidates against job descriptions using TF-IDF matching.</p>
         <div class="actions">
             <a class="btn primary" href="{{ url_for('register') }}">Get Started</a>
             <a class="btn ghost" href="{{ url_for('about') }}">Learn more</a>
         </div>
     </div>
     <div class="hero-card">
-        <p class="muted">Sample matches</p>
+        <p class="muted">Latest openings</p>
         <ul class="list">
             {% for job in jobs %}
                 <li>
@@ -26,18 +26,20 @@
 </section>
 
 <section class="grid">
-    <div class="card">
-        <h3>Unified access</h3>
-        <p>One login page for admins and candidates with tailored destinations.</p>
+    <div class="card feature-card">
+        <div class="feature-icon">&#128196;</div>
+        <h3>Resume parsing</h3>
+        <p>Upload PDF, DOCX, or TXT resumes. Our parser extracts text and identifies key skills automatically.</p>
     </div>
-    <div class="card">
-        <h3>NLP scoring</h3>
-        <p>We compute overlap-based relevance scores to prioritize candidates quickly.</p>
+    <div class="card feature-card">
+        <div class="feature-icon">&#129302;</div>
+        <h3>NLP matching</h3>
+        <p>TF-IDF vectorization and cosine similarity score each resume against job descriptions for transparent ranking.</p>
     </div>
-    <div class="card">
-        <h3>Responsive UI</h3>
-        <p>Modern layout that works on laptops, tablets, and phones.</p>
+    <div class="card feature-card">
+        <div class="feature-icon">&#128202;</div>
+        <h3>Analytics &amp; insights</h3>
+        <p>Visual reports show application trends, skill distribution, and top-matching candidates at a glance.</p>
     </div>
 </section>
 {% endblock %}
-

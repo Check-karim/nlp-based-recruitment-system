@@ -6,15 +6,39 @@
         <p class="muted">Your latest resume</p>
         {% if latest_resume %}
             <div class="resume-box">
-                <p>{{ latest_resume.content[:250] }}{% if latest_resume.content|length > 250 %}...{% endif %}</p>
+                {% if latest_resume.filename %}
+                    <p class="resume-filename"><strong>File:</strong> {{ latest_resume.filename }}</p>
+                {% endif %}
+                <p>{{ latest_resume.content[:300] }}{% if latest_resume.content|length > 300 %}...{% endif %}</p>
+                {% if latest_resume.skills %}
+                    <div class="skill-tags">
+                        {% for skill in latest_resume.skills.split(', ') %}
+                            <span class="skill-tag">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
                 <p class="muted small">Updated {{ latest_resume.created_at.strftime('%Y-%m-%d') }}</p>
             </div>
         {% else %}
-            <p class="muted">No resume yet. Paste one below.</p>
+            <p class="muted">No resume yet. Upload a file or paste text below.</p>
         {% endif %}
-        <form method="POST" action="{{ url_for('upload_resume') }}" class="form">
-            <label>Upload / paste resume
-                <textarea name="resume_text" rows="5" placeholder="Paste your resume text" required></textarea>
+        <form method="POST" action="{{ url_for('upload_resume') }}" class="form" enctype="multipart/form-data">
+            <label>Upload resume file
+                <div class="upload-zone" id="uploadZone">
+                    <input type="file" name="resume_file" id="resumeFile" accept=".pdf,.docx,.txt" class="file-input">
+                    <div class="upload-placeholder">
+                        <span class="upload-icon">&#128196;</span>
+                        <span>Drop your PDF, DOCX, or TXT file here</span>
+                        <span class="muted small">or click to browse (max 5 MB)</span>
+                    </div>
+                    <div class="upload-selected" id="uploadSelected" style="display:none;">
+                        <span class="upload-icon">&#9989;</span>
+                        <span id="selectedFileName"></span>
+                    </div>
+                </div>
+            </label>
+            <label>Or paste resume text
+                <textarea name="resume_text" rows="5" placeholder="Paste your resume text here"></textarea>
             </label>
             <button class="btn primary" type="submit">Save resume</button>
         </form>
@@ -23,14 +47,14 @@
     <div class="card">
         <h3>Your applications</h3>
         <div class="table">
-            <div class="table-head">
+            <div class="table-head three-col">
                 <span>Job</span><span>Status</span><span>Score</span>
             </div>
             {% for app in applications %}
-                <div class="table-row">
+                <div class="table-row three-col">
                     <span>{{ app.job.title }}</span>
-                    <span class="pill subtle">{{ app.status }}</span>
-                    <span>{{ app.match_score }}%</span>
+                    <span class="pill subtle status-{{ app.status|lower|replace(' ', '-') }}">{{ app.status }}</span>
+                    <span class="score">{{ app.match_score }}%</span>
                 </div>
             {% else %}
                 <p class="muted">No applications yet.</p>
@@ -43,7 +67,7 @@
     <div class="card">
         <div class="header-row">
             <h3>Open roles</h3>
-            <p class="muted small">Apply with your saved or new resume text.</p>
+            <p class="muted small">Apply with your saved or a new resume.</p>
         </div>
         <div class="grid">
             {% for job in jobs %}
@@ -53,8 +77,11 @@
                         <span class="pill subtle">{{ job.location or "Remote" }}</span>
                     </div>
                     <p>{{ job.description[:180] }}{% if job.description|length > 180 %}...{% endif %}</p>
-                    <form method="POST" action="{{ url_for('apply', job_id=job.id) }}" class="form compact">
-                        <label>Optional: customize resume for this job
+                    <form method="POST" action="{{ url_for('apply', job_id=job.id) }}" class="form compact" enctype="multipart/form-data">
+                        <label>Upload resume for this job
+                            <input type="file" name="resume_file" accept=".pdf,.docx,.txt" class="file-input-inline">
+                        </label>
+                        <label>Or paste resume text
                             <textarea name="resume_text" rows="3" placeholder="Leave blank to use your latest saved resume"></textarea>
                         </label>
                         <button class="btn secondary" type="submit">Apply</button>
@@ -68,3 +95,36 @@
 </section>
 {% endblock %}
 
+{% block scripts %}
+<script>
+(function () {
+    var zone = document.getElementById("uploadZone");
+    var input = document.getElementById("resumeFile");
+    var placeholder = zone.querySelector(".upload-placeholder");
+    var selected = document.getElementById("uploadSelected");
+    var nameEl = document.getElementById("selectedFileName");
+
+    if (!zone || !input) return;
+
+    function showFile(file) {
+        nameEl.textContent = file.name + " (" + (file.size / 1024).toFixed(1) + " KB)";
+        placeholder.style.display = "none";
+        selected.style.display = "flex";
+        zone.classList.add("has-file");
+    }
+
+    input.addEventListener("change", function () { if (this.files.length) showFile(this.files[0]); });
+
+    zone.addEventListener("dragover", function (e) { e.preventDefault(); zone.classList.add("drag-over"); });
+    zone.addEventListener("dragleave", function () { zone.classList.remove("drag-over"); });
+    zone.addEventListener("drop", function (e) {
+        e.preventDefault();
+        zone.classList.remove("drag-over");
+        if (e.dataTransfer.files.length) {
+            input.files = e.dataTransfer.files;
+            showFile(e.dataTransfer.files[0]);
+        }
+    });
+})();
+</script>
+{% endblock %}

@@ -2,31 +2,89 @@
 {% block content %}
 <section class="narrow">
     <div class="card">
-        <h2>Reports</h2>
-        <p class="muted">Lightweight overview of pipeline health.</p>
-        <h4>Applications per job</h4>
-        <ul class="list">
+        <div class="header-row" style="margin-bottom:16px;">
+            <div>
+                <h2>Analytics &amp; Reports</h2>
+                <p class="muted">NLP-powered insights into your recruitment pipeline.</p>
+            </div>
+            <div class="download-buttons">
+                <a class="btn download-btn excel" href="{{ url_for('download_report_excel') }}">
+                    <span class="dl-icon">&#128196;</span> Excel
+                </a>
+                <a class="btn download-btn pdf" href="{{ url_for('download_report_pdf') }}">
+                    <span class="dl-icon">&#128462;</span> PDF
+                </a>
+            </div>
+        </div>
+
+        <div class="stats" style="margin-bottom:24px;">
+            <div><strong>{{ job_stats|length }}</strong><span>Jobs</span></div>
+            <div><strong>{{ status_stats|map(attribute=1)|sum }}</strong><span>Applications</span></div>
+            <div><strong>{{ avg_score }}%</strong><span>Avg Match</span></div>
+        </div>
+
+        <h3>Applications per job</h3>
+        <div class="bar-chart">
+            {% set max_count = job_stats|map(attribute=1)|max if job_stats else 1 %}
             {% for title, count in job_stats %}
-                <li class="flex-between">
-                    <span>{{ title }}</span>
-                    <span class="pill subtle">{{ count }}</span>
-                </li>
+            <div class="bar-row">
+                <span class="bar-label">{{ title }}</span>
+                <div class="bar-track">
+                    <div class="bar-fill" style="width:{{ (count / max_count * 100)|int }}%">{{ count }}</div>
+                </div>
+            </div>
             {% else %}
-                <li>No data yet.</li>
+            <p class="muted">No data yet.</p>
             {% endfor %}
-        </ul>
-        <h4>Status distribution</h4>
-        <ul class="list">
+        </div>
+
+        <h3>Status distribution</h3>
+        <div class="status-grid">
             {% for status, count in status_stats %}
-                <li class="flex-between">
-                    <span>{{ status }}</span>
-                    <span class="pill subtle">{{ count }}</span>
-                </li>
+            <div class="status-card status-{{ status|lower|replace(' ', '-') }}">
+                <strong>{{ count }}</strong>
+                <span>{{ status }}</span>
+            </div>
             {% else %}
-                <li>No data yet.</li>
+            <p class="muted">No data yet.</p>
             {% endfor %}
-        </ul>
+        </div>
+
+        <h3>Top candidates by average match score</h3>
+        <div class="table">
+            <div class="table-head two-col">
+                <span>Candidate</span><span>Avg Score</span>
+            </div>
+            {% for name, avg in top_candidates %}
+            <div class="table-row two-col">
+                <span>{{ name }}</span>
+                <span class="score">{{ "%.1f"|format(avg) }}%</span>
+            </div>
+            {% else %}
+            <p class="muted">No candidate data yet.</p>
+            {% endfor %}
+        </div>
+
+        {% if skill_frequency %}
+        <h3>Most common skills across resumes</h3>
+        <div class="skill-cloud">
+            {% for skill, count in skill_frequency %}
+                <span class="skill-tag cloud" style="--weight:{{ count }}">{{ skill }} <small>({{ count }})</small></span>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if apps_over_time %}
+        <h3>Applications over time</h3>
+        <div class="timeline">
+            {% for date, count in apps_over_time %}
+            <div class="timeline-item">
+                <span class="timeline-date">{{ date }}</span>
+                <span class="pill subtle">{{ count }} app{{ 's' if count != 1 else '' }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
 </section>
 {% endblock %}
-
